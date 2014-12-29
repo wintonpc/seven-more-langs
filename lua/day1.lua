@@ -14,7 +14,6 @@ function is_prime(n)
    return true
 end
 
--- :'(   http://stackoverflow.com/questions/12372788/in-lua-how-to-get-the-tail-of-an-array-without-copying-it
 function reduce(max, init, f)
    for i = 0, max do
       init = f(init, i)
@@ -55,4 +54,15 @@ end
 function test_reduce()
    add = function(a,b) return a + b end
    assert_equal(15, reduce(5, 0, add))
+end
+
+function test_scope()
+   local a = 1
+   (function()
+       local a = 2
+       (function() a = 3; b = 99 end)()
+       assert_equal(3, a) -- modified the innermost lexical scope
+    end)()
+   assert_equal(1, a) -- but nothing outside of that
+   assert_equal(99, b) -- global scope is the topmost lexical scope
 end
