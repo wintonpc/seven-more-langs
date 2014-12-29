@@ -14,7 +14,17 @@ function is_prime(n)
    return true
 end
 
+-- :'(   http://stackoverflow.com/questions/12372788/in-lua-how-to-get-the-tail-of-an-array-without-copying-it
+function reduce(max, init, f)
+   for i = 0, max do
+      init = f(init, i)
+   end
+   return init
+end
+
 module("day1_tests", lunit.testcase, package.seeall)
+
+-- run with `lunit day1.lua`
 
 function test_ends_in_3()
    assert_false(ends_in_3(0))
@@ -40,4 +50,9 @@ end
 
 function assert_not_prime(n)
    assert_false(is_prime(n))
+end
+
+function test_reduce()
+   add = function(a,b) return a + b end
+   assert_equal(15, reduce(5, 0, add))
 end
